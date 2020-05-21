@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RotateVideo
+﻿namespace RotateVideo
 {
     public interface IReadMeta
     {
-        string ReadRotation(string mediaFile);
+        int ReadRotation(string mediaFile);
     }
 }

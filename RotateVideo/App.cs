@@ -10,23 +10,22 @@ namespace RotateVideo
     {
         private readonly IConfigurationRoot _config;
         private readonly IReadMeta _readMeta;
+        private readonly IRotate _rotate;
 
-        public App(IConfigurationRoot config, IReadMeta readMeta)
+        public App(IConfigurationRoot config, IReadMeta readMeta, IRotate rotate)
         {
             _config = config;
             _readMeta = readMeta;
+            _rotate = rotate;
         }
 
         public async Task Run(string mediaFile)
         {
+            Console.WriteLine();
 
-            Console.WriteLine(mediaFile);
+            var rotation = _readMeta.ReadRotation(mediaFile);
 
-            Console.WriteLine(_readMeta.ReadRotation(mediaFile));
-
-
-            // do not close automatically (debugging)
-            Console.ReadLine();
+            _rotate.Do(rotation, mediaFile);
         }
     }
 }

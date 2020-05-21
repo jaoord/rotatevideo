@@ -20,12 +20,9 @@ namespace RotateVideo
 
         static async Task MainAsync(string[] args)
         {
-            // Create service collection
-
             ServiceCollection serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
 
-            // Create service provider
             IServiceProvider serviceProvider = serviceCollection.BuildServiceProvider();
             await serviceProvider.GetService<App>().Run(args[0]);
         }
@@ -44,6 +41,7 @@ namespace RotateVideo
             // Add app
             serviceCollection.AddTransient<App>();
             serviceCollection.AddTransient<IReadMeta, ReadMeta>();
+            serviceCollection.AddTransient<IRotate, Rotate>();
         }
     }
 }
