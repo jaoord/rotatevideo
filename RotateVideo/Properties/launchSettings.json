@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "RotateVideo": {
+      "commandName": "Project",
+      "commandLineArgs": "c:\\temp\\test.mp4"
+    }
+  }
+}
