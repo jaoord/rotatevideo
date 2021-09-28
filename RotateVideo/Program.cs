@@ -10,16 +10,14 @@ namespace RotateVideo
     {
         public static IConfigurationRoot configuration;
 
-        static void Main(string[] args)
+        static async Task Main(string[] args)
         {
             if (args.Length == 0)
+            {
+                Console.WriteLine("Please specify video file");
                 return; // return if no file was dragged onto exe
+            }
 
-            MainAsync(args).Wait();
-        }
-
-        static async Task MainAsync(string[] args)
-        {
             ServiceCollection serviceCollection = new ServiceCollection();
             ConfigureServices(serviceCollection);
 
