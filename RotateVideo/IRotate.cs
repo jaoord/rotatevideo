@@ -1,4 +1,6 @@
-﻿namespace RotateVideo
+﻿using System.Threading.Tasks;
+
+namespace RotateVideo
 {
     public interface IRotate
     {

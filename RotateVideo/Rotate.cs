@@ -1,16 +1,13 @@
 ﻿using Microsoft.Extensions.Configuration;
+using Spectre.Console;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Runtime.ExceptionServices;
-using System.Text;
 
 namespace RotateVideo
 {
     public class Rotate : IRotate
     {
-
         private readonly IConfigurationRoot _config;
 
         public Rotate(IConfigurationRoot config)
@@ -21,7 +18,6 @@ namespace RotateVideo
         public void Do(int currentRotation, string mediaFile)
         {
             var outputPath = GetOutputPath(mediaFile);
-
             if (!File.Exists(mediaFile)) { 
                 Console.WriteLine("Input file does not exist");
                 return;
@@ -38,18 +34,27 @@ namespace RotateVideo
             var letterBox = $"-vf \"scale=(iw*sar)*min(1280/(iw*sar)\\,720/ih):ih*min(1280/(iw*sar)\\,720/ih), pad=1280:720:(1280-iw*min(1280/iw\\,720/ih))/2:(720-ih*min(1280/iw\\,720/ih))/2\"";
             string arguments = $"-i {mediaFile} {letterBox} \"{outputFile}\"";
 
-            using (var process = new Process())
+            var status = AnsiConsole
+               .Status()
+               .Spinner(Spinner.Known.Clock)
+               .AutoRefresh(true);
+
+            status.Start("[green]Processing media file...[/]", ctx =>
             {
-                process.StartInfo.FileName = _config.GetSection("ffmpeg").Value;
-                process.StartInfo.Arguments = arguments;
+                using (var process = new Process())
+                {
+                    process.StartInfo.FileName = _config.GetSection("ffmpeg").Value;
+                    process.StartInfo.Arguments = arguments;
 
-                process.StartInfo.CreateNoWindow = true;
-                process.StartInfo.UseShellExecute = false;
+                    process.StartInfo.CreateNoWindow = true;
+                    process.StartInfo.UseShellExecute = false;
 
-                process.Start();
-                process.WaitForExit(100);
-            }
-            Console.WriteLine($"File exported to {outputPath}");
+                    process.Start();
+                    process.WaitForExit();
+                }
+            
+                ctx.Status($"File exported to {outputPath}");
+            });
         }
 
         private string GetOutputPath(string mediaFile)
